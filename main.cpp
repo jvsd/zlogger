@@ -65,6 +65,7 @@ int main(int argc, char* argv[])
     std::string imu1_buffer;
     std::string pressure_buffer;
     std::string imu2_buffer;
+    std::string request;
 
 
 
@@ -72,54 +73,57 @@ int main(int argc, char* argv[])
     int bytes_recv_pressure = 0;
     int bytes_recv_imu2 = 0;
     int counter;
+    int loops = 0;
     while(1){
 
-        zmq::message_t request;
-        requested.recv(&request);
+        request = s_recv(requested);
         counter = 0;
         imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY | O_SYNC); //| O_NDELAY);
-        imu2 = open("/dev/ttyO2",O_RDWR| O_NOCTTY | O_SYNC); //| O_NDELAY);
+        imu2 = open("/dev/ttyO2",O_RDWR| O_NOCTTY | O_SYNC);
         pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY | O_SYNC); // | O_NDELAY);
 
-        while(counter < 650)
+	//Get time when we start for syncing.
+        std::stringstream outTime;
+        gettimeofday(&curTime,NULL);
+        localTime=localtime(&curTime.tv_sec);
+        int day = localTime->tm_mday;
+        int hour = localTime->tm_hour;
+        int min = localTime->tm_min;
+        int sec = localTime->tm_sec;
+        int millis = curTime.tv_usec / 1000;
+        outTime << day << ":" << hour << ":" << min << ":" << sec << ":" << millis;
+	s_send(requested,outTime.str());
+
+        while(counter < 500)
         {
             imu1_buffer.reserve(SEND_BUF_SIZE);
             imu2_buffer.reserve(SEND_BUF_SIZE);
             pressure_buffer.reserve(SEND_BUF_SIZE);
-            std::stringstream outTime;
 
             bytes_recv_imu1 = 0;
             bytes_recv_imu2 = 0;
             bytes_recv_pressure = 0;
 
-            gettimeofday(&curTime,NULL);
-            localTime=localtime(&curTime.tv_sec);
-
-
-            int day = localTime->tm_mday;
-            int hour = localTime->tm_hour;
-            int min = localTime->tm_min;
-            int sec = localTime->tm_sec;
-            int millis = curTime.tv_usec / 1000;
 
             imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
             imu2_buffer = fill_buffer(imu2,bytes_recv_imu2);
             pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
 
-            outTime << day << ":" << hour << ":" << min << ":" << sec << ":" << millis;
-            s_sendmore(socket_imu1,outTime.str());
+            //s_sendmore(socket_imu1,outTime.str());
             s_sendmore(socket_imu1,imu1_buffer);
 	    s_sendmore(socket_imu1,imu2_buffer);
             s_send(socket_imu1,pressure_buffer);
             counter += 1;
         }
 
+	loops+=1;
         close(imu1);
         close(imu2);
         close(pressure);
-        zmq::message_t reply(sizeof(int));
-        memcpy ((void *) reply.data (), &counter,sizeof(int));
-        requested.send(reply);
+	std::cout << "Request: " << request << " ,Loops " << loops << std::endl;
+        //zmq::message_t reply(sizeof(int));
+        //memcpy ((void *) reply.data (), &counter,sizeof(int));
+        //requested.send(reply);
     }
 
 }

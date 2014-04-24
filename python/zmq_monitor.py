@@ -23,8 +23,7 @@ if __name__=='__main__':
         serial_baud = sys.argv[4]
         
     cont = zmq.Context()
-    m_imu = imu_monitor.serial_publisher(3,cont,zmq_port,serial_port,serial_baud,'imu1.log')
-    m_imu2 = imu_monitor.serial_publisher(3,cont,str(int(zmq_port)+1),serial_port,serial_baud,'imu2.log')
+    m_imu = imu_monitor.serial_publisher(3,cont,zmq_port,serial_port,serial_baud)
     m_pressure = pressure_monitor.logger(s_type = 3,zmq_context = cont,port = str(int(zmq_port)+10),file_name = 'pressure.log')
 
     serial_subscriber = cont.socket(zmq.SUB)
@@ -35,8 +34,7 @@ if __name__=='__main__':
         message = serial_subscriber.recv_multipart()
 
         m_imu.run(buffer = message[1],time_stamp = message[0])
-	m_imu.run(buffer = message[2],time_stamp = message[0])
-        m_pressure.run(buffer = message[3],time_stamp = message[0])
+        m_pressure.run(buffer = message[2],time_stamp = message[0])
 
 
 
