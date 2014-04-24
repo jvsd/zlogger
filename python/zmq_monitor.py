@@ -31,7 +31,7 @@ if __name__=='__main__':
     serial_subscriber.setsockopt(zmq.SUBSCRIBE,'')
     serial_subscriber.connect("tcp://192.168.0.201:4000")
 
-    requested = cont.sock(zmq.REQ)
+    requested = cont.socket(zmq.REQ)
     requested.connect("tcp://192.168.0.201:4001")
     requested.send('none')
     start_stamp = requested.recv()

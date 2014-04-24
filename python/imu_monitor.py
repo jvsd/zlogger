@@ -21,7 +21,7 @@ def format(value):
     return "%.3f" % value
 
 class serial_publisher(object):
-    def __init__(self,s_type,zmq_context,port,serial_port,serial_baud):
+    def __init__(self,s_type,zmq_context,port,serial_port,serial_baud,log_name='imu.log'):
         self.s_type=s_type
         self.zmq_context = zmq_context
         self.server=zmq_context.socket(zmq.REP)
@@ -43,6 +43,7 @@ class serial_publisher(object):
         self.ctime = 0
         self.m_time = datetime.datetime.now()
         self.dt = np.zeros(100).tolist()
+	self.log_name =log_name
 
         if s_type == 0: # Serial port
             self.ser = serial.Serial(
@@ -67,7 +68,7 @@ class serial_publisher(object):
             print 'no source'
 
         self.buffer = ''
-        self.log_file = open('imu.log','a')
+        self.log_file = open(log_name,'a')
 
 
     def run(self,buffer='',time_stamp = ''):
