@@ -21,7 +21,7 @@ def format(value):
     return "%.3f" % value
 
 class serial_publisher(object):
-    def __init__(self,s_type,zmq_context,port,serial_port,serial_baud):
+    def __init__(self,s_type,zmq_context,port,serial_port,serial_baud,log_name = 'imu.log'):
         self.s_type=s_type
         self.zmq_context = zmq_context
         self.server=zmq_context.socket(zmq.REP)
@@ -43,6 +43,7 @@ class serial_publisher(object):
         self.ctime = 0
         self.m_time = datetime.datetime.now()
         self.dt = np.zeros(100).tolist()
+	self.log_name = log_name
 
         if s_type == 0: # Serial port
             self.ser = serial.Serial(
@@ -67,7 +68,7 @@ class serial_publisher(object):
             print 'no source'
 
         self.buffer = ''
-        self.log_file = open('imu.log','a')
+        self.log_file = open(log_name,'a')
 
 
     def run(self,buffer='',time_stamp = ''):
@@ -98,7 +99,7 @@ class serial_publisher(object):
                         self.server.recv()
                         self.server.send(lines[i])
 
-                self.log_data(lines[i])
+                self.log_data(lines[i],time_stamp)
                 self.data_server.send(lines[i])
                 if len(lines[i]) != 14:
                     self.error_lines += 1
@@ -111,7 +112,7 @@ class serial_publisher(object):
         self.m_time = datetime.datetime.now()
         print 'Mean time: ' + str(np.asarray(self.dt).mean()*100000.)	
 
-    def log_data(self,raw_data):
+    def log_data(self,raw_data,time_stamp):
         s = dict(self.mark_poller.poll(0))
         if s:
             if s.get(self.marker) == zmq.POLLIN:
@@ -121,7 +122,7 @@ class serial_publisher(object):
         plist = [t_imu.ax,t_imu.ay,t_imu.az,t_imu.gx,t_imu.gy,t_imu.gz,t_imu.time,self.mark]
         for item in plist:
             self.log_file.write("%f\t" % item)
-        self.log_file.write(self.time + '\n')
+        self.log_file.write(time_stamp + '\n')
         
         
     def convert_imu(self,binary_line):
