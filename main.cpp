@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <ctime>
-
+//These can be tweaked for performance.
 int SEND_BUF_SIZE = 512*2;
 int RECV_BUF_SIZE = 64;
 bool DEBUG = false;

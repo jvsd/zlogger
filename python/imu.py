@@ -38,7 +38,6 @@ def get_data_imu(sock):
 	l_imu = []
 	while(count < 100):
 		x_imu = convert_imu(sock.recv())
-		print x_imu.time
 		imu1_data = np.zeros((1,7))
 		imu1_data[0,0] = x_imu.ax
 		imu1_data[0,1] = x_imu.ay
@@ -48,9 +47,7 @@ def get_data_imu(sock):
 		imu1_data[0,5] = x_imu.gz
 		imu1_data[0,6] = x_imu.time
 		out_data = out_data.append(pd.DataFrame(imu1_data,columns=['ax','ay','az','gx','gy','gz','seq']))
-		print count
 		count+=1
-	print out_data[1:out_data.shape[0]]
 	return out_data[1:out_data.shape[0]]
 
 

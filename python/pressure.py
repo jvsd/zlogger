@@ -17,13 +17,13 @@ def convert_pressure(buffer):
 		temp = []	
 		for j in range(DATA_VARIABLES):
 			k = j*2
-			temp.append(struct.unpack('h',i[k]+i[k+1])[0])
+			temp.append(struct.unpack('h',buffer[k]+buffer[k+1])[0])
 		try:    
-			temp.append(struct.unpack('H',i[DATA_VARIABLES*2:len(i)])[0])
+			temp.append(struct.unpack('H',buffer[DATA_VARIABLES*2:len(buffer)])[0])
 			temp = np.asarray(temp)
 		except:
 			print 'exception\n'
-			print i[DATA_VARIABLES*2:len(i)]
+			print buffer[DATA_VARIABLES*2:len(buffer)]
 			temp = []
 		if len(temp) >10:
 			out_pressure = pressure
@@ -43,7 +43,8 @@ def get_data_pressure(sock):
 		pressure_data[0,i] = x_pressure.pressure[i]
 	pressure_data[0,22]=x_pressure.alpha
 	pressure_data[0,23]=x_pressure.beta
-	pressure_data[0,25]=x_pressure.seq
+	pressure_data[0,24]=x_pressure.seq
 	pressure_data[0,21]=x_pressure.dynamic_p
 	out_data = pd.DataFrame(pressure_data,columns = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'alpha','beta','seq'])
+	print out_data
 	return out_data

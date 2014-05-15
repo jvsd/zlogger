@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#export PYTHONPATH=/media/disk/users/jamesd/Dropbox/Developer/virtualenv/imu/python/pyqtgraph/pyqtgraph:/media/disk/users/jamesd/Dropbox/Developer/virtualenv/imu/python/pyqtgraph/examples
 
 import initExample
 
@@ -34,6 +35,7 @@ def update():
 	p.addItem(curve)
 	p_imu2.addItem(curve_imu2)
 	p.addItem(lr)
+	p_imu2.addItem(lr2)
 	ptr += 1
 	now = time()
 	dt = now - lastTime
@@ -52,6 +54,15 @@ def updatePlot():
 	frq,amp = plotspectrum(data['imu1']['az'][int(r[0]):int(r[1])],641.425+p_frq,'k')
 	curve = pg.PlotCurveItem(frq,amp,pen="r")
 	p2.addItem(curve)
+	m_frq = frq[amp.argmax()]
+	print m_frq, p_frq
+def updatePlot2():
+	global d_frq,p_frq,m_frq
+	p3.clear()
+	r = lr2.getRegion()
+	frq,amp = plotspectrum(data['imu2']['az'][int(r[0]):int(r[1])],641.425+p_frq,'k')
+	curve = pg.PlotCurveItem(frq,amp,pen="r")
+	p3.addItem(curve)
 	m_frq = frq[amp.argmax()]
 	print m_frq, p_frq
         #if m_frq < d_frq:
@@ -96,10 +107,13 @@ fps = None
 lr = pg.LinearRegionItem([0,500])
 lr.setZValue(-10)
 
+lr2 = pg.LinearRegionItem([0,500])
+lr2.setZValue(-10)
+
     #app.processEvents()  ## force complete redraw for every plot
 timer = QtCore.QTimer()
 timer.timeout.connect(update)
-timer.start(0)
+timer.start(20)
     
 
 
@@ -113,7 +127,10 @@ d_frq = 159.20
 p_frq = 9.42
 m_frq = 0.0
 
+p3 = win.addPlot(title="Imu2 fft")
+
 lr.sigRegionChanged.connect(updatePlot)
+lr2.sigRegionChanged.connect(updatePlot2)
 
 
 ## Start Qt event loop unless running in interactive mode.
