@@ -36,7 +36,7 @@ stdarg.h
 signal.h
 -
 
-/home/jamesd/Developer/zlogger/main.cpp
+/Users/jamesd/Developer/beagle/zlogger/main.cpp
 sys/ioctl.h
 -
 sys/types.h
@@ -46,5 +46,29 @@ time.h
 zhelpers.hpp
 -
 inttypes.h
+-
+
+/opt/local/include/zmq.h
+errno.h
+-
+stddef.h
+-
+stdio.h
+-
+winsock2.h
+-
+
+/opt/local/include/zmq.hpp
+zmq.h
+-
+algorithm
+-
+cassert
+-
+cstring
+-
+string
+-
+exception
 -
 
