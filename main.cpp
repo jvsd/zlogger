@@ -11,8 +11,8 @@
 #include <fcntl.h>
 #include <ctime>
 
-int SEND_BUF_SIZE = 512;
-int RECV_BUF_SIZE = 128;
+int SEND_BUF_SIZE = 512*2;
+int RECV_BUF_SIZE = 64;
 bool DEBUG = false;
 
 // ./main ran as default and python script ran with -5 works well. Must setup ports with python prior. also set cpu_Freq to performance.
@@ -25,7 +25,7 @@ std::string fill_buffer(int& file,int& bytes_recv){
 
         while(bytes_recv < RECV_BUF_SIZE)
         {
-            n = read(file,recv_buffer,RECV_BUF_SIZE);
+            n = read(file,recv_buffer,RECV_BUF_SIZE-n);
             if(n < 0)
             {
                 std::cout << "Failed to recv data." << n << std::endl;
@@ -76,13 +76,16 @@ int main(int argc, char* argv[])
     int loops = 0;
     while(1){
 
+	std::cout << "Waiting for request ..." << std::endl;
         request = s_recv(requested);
         counter = 0;
+	std::cout << "Opening UARTS" << std::endl;
         imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY | O_SYNC); //| O_NDELAY);
         imu2 = open("/dev/ttyO2",O_RDWR| O_NOCTTY | O_SYNC);
         pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY | O_SYNC); // | O_NDELAY);
 
 	//Get time when we start for syncing.
+	std::cout << "Getting start time" << std::endl;
         std::stringstream outTime;
         gettimeofday(&curTime,NULL);
         localTime=localtime(&curTime.tv_sec);
@@ -91,7 +94,7 @@ int main(int argc, char* argv[])
         int min = localTime->tm_min;
         int sec = localTime->tm_sec;
         int millis = curTime.tv_usec / 1000;
-        outTime << day << ":" << hour << ":" << min << ":" << sec << ":" << millis;
+        outTime << day << ":" << hour << ":" << min << ":" << sec << "." << millis;
 	s_send(requested,outTime.str());
 
         while(counter < 500)
