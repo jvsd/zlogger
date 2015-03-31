@@ -3,23 +3,52 @@
 #include <time.h>
 #include <zhelpers.hpp>
 #include <inttypes.h>
+#include <iostream>
+#include <stdlib.h>
+#include <fcntl.h>
 
 
-int main(void)
+int main(int argc, char* argv[])
 {
+    if(argc <3)
+    {
+        std::cout << "Not enough argumnets: Port, Serial Port" << std::endl;
+        return 1;
+    }
+    std::string port = argv[1];
+    std::string serial_port = argv[2];
+    std::string bind_cmd = "tcp://*:";
+
     zmq::context_t context(1);
-    zmq::socket_t socket(context,ZMQ_SUB);
-    uint64_t hwm = 1;
-    socket.setsockopt(ZMQ_SUBSCRIBE,"",0);
-    socket.connect("tcp://10.0.2.14:5000");
+    zmq::socket_t socket(context,ZMQ_PUB);
+    socket.bind(bind_cmd+port)
 
-    int rx = 0;
+    int ser;
+    ser = open(serial_port);
+    char recv_buffer[64];
+    char send_buffer[128];
+    memset(recv_buffer,'\0',sizeof(recv_buffer));
+
+
+    int bytes_recv = 0;
+    int n = 0;
     while(1){
-
-        std::cout << "Received: " << rx << std::endl;
-        std::string s = s_recv(socket);
-        std::cout << s;
-        rx++;
+        //std::cout << "Received: " << rx << std::endl;
+        bytes_recv = 0;
+        while(bytes_recv < 64)
+        {
+            n = read(ser,&buffer,64);
+            if(n < 0)
+            {
+                std::cout << "Failed to recv data." << std::endl;
+                break;
+            }
+            memset(&send_buffer[bytes_recv],buffer,n);
+            bytes_recv += n;
+        }
+        zmq::message_t message(bytes_recv);
+        memset(message,send_buffer,bytes_recv)
+        socket.send(message);
     }
 
 }
