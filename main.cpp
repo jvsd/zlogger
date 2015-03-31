@@ -24,10 +24,7 @@ std::string fill_buffer(int& file,int& bytes_recv){
             }
             send_buffer.insert(bytes_recv,recv_buffer);
             bytes_recv += n;
-            std::cout << "loop" << std::endl;
         }
-        std::cout << "Send_Buffer: "<< send_buffer << std::endl;
-        std::cout << "Bytes: "<< bytes_recv << std::endl;
         return send_buffer;
 }
 
@@ -61,10 +58,10 @@ int main(int argc, char* argv[])
 
         bytes_recv_imu1 = 0;
         bytes_recv_pressure = 0;
-        std::cout << "here" << std::endl;
+
         imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
         pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
-        std::cout << "Out_send_buffer: " << imu1_buffer << std::endl;
+
         s_send(socket_imu1,imu1_buffer);
         s_send(socket_pressure,pressure_buffer);
 
