@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-int fill_buffer(int& file,char * recv_buffer, char * send_buffer){
+int fill_buffer(int& file,char* recv_buffer, char* send_buffer){
         int bytes_recv = 0;
         int n = 0;
         while(bytes_recv < 64)
@@ -18,7 +18,7 @@ int fill_buffer(int& file,char * recv_buffer, char * send_buffer){
                 std::cout << "Failed to recv data." << n << std::endl;
                 break;
             }
-            memcpy(send_buffer+bytes_recv,recv_buffer,n);
+            memcpy(&send_buffer[bytes_recv],recv_buffer,n);
             bytes_recv += n;
         }
         std::cout << "fill2" << std::endl;
@@ -52,17 +52,21 @@ int main(int argc, char* argv[])
     char recv_imu1_buffer[64];
     char recv_pressure_buffer[64];
 
+    memset(recv_imu1_buffer, '\0', sizeof recv_imu1_buffer);
+    memset(recv_pressure_buffer, '\0', sizeof recv_pressure_buffer);
     char imu1_buffer[128];
     char pressure_buffer[128];
 
+    memset(imu1_buffer, '\0', sizeof imu1_buffer);
+    memset(pressure_buffer, '\0', sizeof pressure_buffer);
 
     int bytes_recv_imu1 = 0;
     int bytes_recv_pressure = 0;
     while(1){
 
         std::cout << "here" << std::endl;
-        bytes_recv_imu1 = fill_buffer(imu1,&recv_imu1_buffer[0],&imu1_buffer[0]);
-        bytes_recv_pressure =fill_buffer(pressure,&recv_pressure_buffer[0],&pressure_buffer[0]);
+        bytes_recv_imu1 = fill_buffer(imu1,recv_imu1_buffer,imu1_buffer);
+        bytes_recv_pressure =fill_buffer(pressure,recv_pressure_buffer,pressure_buffer);
         send_buffer(&socket_imu1,imu1_buffer,bytes_recv_imu1);
         send_buffer(&socket_pressure,pressure_buffer,bytes_recv_pressure);
 
