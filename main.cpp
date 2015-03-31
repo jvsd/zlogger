@@ -66,6 +66,8 @@ int main(int argc, char* argv[])
     int bytes_recv_pressure = 0;
     while(1){
 
+        bytes_recv_imu1 = 0;
+        bytes_recv_pressure = 0;
         std::cout << "here" << std::endl;
         imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
         pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
