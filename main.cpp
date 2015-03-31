@@ -33,7 +33,7 @@ void send_buffer(zmq::socket_t* socket, std::vector<char> buffer, int bytes_recv
         std::cout << "sending" << std::endl;
         zmq::message_t message(bytes_recv);
         memcpy((char*)message.data(),&buffer[0],bytes_recv);
-        socket->send(messsage);
+        socket->send(message);
 }
     
 
