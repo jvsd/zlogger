@@ -24,10 +24,10 @@ int fill_buffer(int file,char * recv_buffer, char* send_buffer){
         return bytes_recv;
 }
 
-void send_buffer(zmq::socket_t socket, char* buffer, int bytes_recv){
+void send_buffer(zmq::socket_t* socket, char* buffer, int bytes_recv){
         zmq::message_t message(bytes_recv);
         memcpy((char*)message.data(),send_buffer,bytes_recv);
-        socket.send(message);
+        socket->send(message);
 }
     
 
@@ -59,8 +59,8 @@ int main(int argc, char* argv[])
     while(1){
         bytes_recv_imu1 = fill_buffer(imu1,recv_imu1_buffer,imu1_buffer);
         bytes_recv_pressure =fill_buffer(pressure,recv_pressure_buffer,pressure_buffer);
-        send_buffer(socket_imu1,imu1_buffer,bytes_recv_imu1);
-        send_buffer(socket_pressure,pressure_buffer,bytes_recv_pressure);
+        send_buffer(&socket_imu1,imu1_buffer,bytes_recv_imu1);
+        send_buffer(&socket_pressure,pressure_buffer,bytes_recv_pressure);
 
     }
 
