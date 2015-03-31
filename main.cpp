@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <vector>
 
 std::vector<char> fill_buffer(int& file,int& bytes_recv){
         int n = 0;
