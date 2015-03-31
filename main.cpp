@@ -22,6 +22,7 @@ int fill_buffer(int file,char * recv_buffer, char* send_buffer){
             memcpy(&send_buffer[bytes_recv],recv_buffer,n);
             bytes_recv += n;
         }
+        std::cout << "fill2" << std::endl;
         return bytes_recv;
 }
 
