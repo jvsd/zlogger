@@ -43,11 +43,11 @@ int main(int argc, char* argv[])
                 std::cout << "Failed to recv data." << std::endl;
                 break;
             }
-            memset(&send_buffer[bytes_recv],recv_buffer,n);
+            memcpy(&send_buffer[bytes_recv],recv_buffer,n);
             bytes_recv += n;
         }
         zmq::message_t message(bytes_recv);
-        memset((char*)message.data(),send_buffer,bytes_recv);
+        memcpy((char*)message.data(),send_buffer,bytes_recv);
         socket.send(message);
     }
 
