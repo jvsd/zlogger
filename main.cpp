@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-char[128] fill_buffer(int& file,int& bytes_recv){
+char[] fill_buffer(int& file,int& bytes_recv){
         int n = 0;
         char recv_buffer[64];
         char send_buffer[128];
