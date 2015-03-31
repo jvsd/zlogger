@@ -25,15 +25,15 @@ std::vector<char> fill_buffer(int& file,int& bytes_recv){
             bytes_recv += n;
             std::cout << "loop" << std::endl;
         }
-        std::cout << "fill2" << std::endl;
+        std::cout << "Send_Buffer: "<< send_buffer << std::endl;
         return send_buffer;
 }
 
 void send_buffer(zmq::socket_t* socket, std::vector<char> buffer, int bytes_recv){
         std::cout << "sending" << std::endl;
-        zmq::message_t* mes = new message(bytes_recv);
-        memcpy((char*)message->data(),&buffer[0],bytes_recv);
-        socket->send(*mes);
+        zmq::message_t message(bytes_recv);
+        memcpy((char*)message.data(),&buffer[0],bytes_recv);
+        socket->send(mes);
 }
     
 
