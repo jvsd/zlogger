@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-int fill_buffer(int& file,char * recv_buffer, char* send_buffer){
+int fill_buffer(int& file,char** recv_buffer, char** send_buffer){
         std::cout << "fill" << std::endl;
         int bytes_recv = 0;
         int n = 0;
@@ -27,7 +27,7 @@ int fill_buffer(int& file,char * recv_buffer, char* send_buffer){
         return bytes_recv;
 }
 
-void send_buffer(zmq::socket_t* socket, char* buffer, int bytes_recv){
+void send_buffer(zmq::socket_t* socket, char** buffer, int bytes_recv){
         std::cout << "sending" << std::endl;
         zmq::message_t message(bytes_recv);
         memcpy((char*)message.data(),buffer,bytes_recv);
