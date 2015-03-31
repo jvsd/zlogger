@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-int fill_buffer(int& file,char& recv_buffer[], char& send_buffer[]){
+int fill_buffer(int& file,char recv_buffer[], char send_buffer[]){
         int bytes_recv = 0;
         int n = 0;
         while(bytes_recv < 64)
@@ -61,8 +61,8 @@ int main(int argc, char* argv[])
     while(1){
 
         std::cout << "here" << std::endl;
-        bytes_recv_imu1 = fill_buffer(imu1,recv_imu1_buffer,imu1_buffer);
-        bytes_recv_pressure =fill_buffer(pressure,recv_pressure_buffer,pressure_buffer);
+        bytes_recv_imu1 = fill_buffer(imu1,&recv_imu1_buffer,&imu1_buffer);
+        bytes_recv_pressure =fill_buffer(pressure,&recv_pressure_buffer,&pressure_buffer);
         send_buffer(&socket_imu1,imu1_buffer,bytes_recv_imu1);
         send_buffer(&socket_pressure,pressure_buffer,bytes_recv_pressure);
 
