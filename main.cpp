@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     socket.bind((bind_cmd+port).c_str());
 
     int ser;
-    ser = open(serial_port.c_str());
+    ser = open(serial_port.c_str(),O_RDWR | O_BINARY, S_IWRITE);
     char recv_buffer[64];
     char send_buffer[128];
     memset(recv_buffer,'\0',sizeof(recv_buffer));
@@ -43,11 +43,11 @@ int main(int argc, char* argv[])
                 std::cout << "Failed to recv data." << std::endl;
                 break;
             }
-            memset(&send_buffer[bytes_recv],buffer,n);
+            memset(&send_buffer[bytes_recv],recv_buffer,n);
             bytes_recv += n;
         }
         zmq::message_t message(bytes_recv);
-        memset(char*(message),send_buffer,bytes_recv);
+        memset((char*)message.data(),send_buffer,bytes_recv);
         socket.send(message);
     }
 
