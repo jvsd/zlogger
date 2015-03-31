@@ -25,7 +25,7 @@ std::vector<char> fill_buffer(int& file,int& bytes_recv){
             bytes_recv += n;
             std::cout << "loop" << std::endl;
         }
-        std::cout << "Send_Buffer: "<< send_buffer << std::endl;
+        std::cout << "Send_Buffer: "<< &send_buffer[0] << std::endl;
         return send_buffer;
 }
 
