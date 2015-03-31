@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     socket.bind((bind_cmd+port).c_str());
 
     int ser;
-    ser = open(serial_port.c_str(),O_RDWR | O_BINARY, S_IWRITE);
+    ser = open(serial_port.c_str(),O_RDWR| O_NOCTTY);
     char recv_buffer[64];
     char send_buffer[128];
     memset(recv_buffer,'\0',sizeof(recv_buffer));
