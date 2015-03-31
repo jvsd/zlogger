@@ -21,8 +21,7 @@ std::vector<char> fill_buffer(int& file,int& bytes_recv){
                 std::cout << "Failed to recv data." << n << std::endl;
                 break;
             }
-            char * data = &send_buffer[0]
-            memcpy(data+bytes_recv,recv_buffer,n);
+            memcpy(&send_buffer[bytes_recv],recv_buffer,n);
             bytes_recv += n;
             std::cout << "loop" << std::endl;
         }
