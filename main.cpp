@@ -31,13 +31,6 @@ std::string fill_buffer(int& file,int& bytes_recv){
         return send_buffer;
 }
 
-void send_buffer(zmq::socket_t* socket, std::string buffer, int bytes_recv){
-        std::cout << "sending" << std::endl;
-        zmq::message_t message(bytes_recv);
-        memcpy((char*)message.data(),buffer.data(),bytes_recv);
-        socket->send(message);
-}
-    
 
 int main(int argc, char* argv[])
 {
@@ -71,8 +64,10 @@ int main(int argc, char* argv[])
         std::cout << "here" << std::endl;
         imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
         pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
-        send_buffer(&socket_imu1,imu1_buffer,bytes_recv_imu1);
-        send_buffer(&socket_pressure,pressure_buffer,bytes_recv_pressure);
+        s_send(socket_imu1,imu1_buffer);
+        s_send(socket_pressure,pressure_buffer);
+
+
 
     }
 
