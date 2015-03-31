@@ -16,7 +16,7 @@ int fill_buffer(int& file,char * recv_buffer, char* send_buffer){
             n = read(file,&recv_buffer,64);
             if(n < 0)
             {
-                std::cout << "Failed to recv data." << std::endl;
+                std::cout << "Failed to recv data." << n << std::endl;
                 break;
             }
             memcpy(&send_buffer[bytes_recv],recv_buffer,n);
