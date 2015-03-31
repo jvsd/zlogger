@@ -12,7 +12,7 @@ int fill_buffer(int file,char * recv_buffer, char* send_buffer){
         int n = 0;
         while(bytes_recv < 64)
         {
-            n = read(ser,&recv_buffer,64);
+            n = read(file,&recv_buffer,64);
             if(n < 0)
             {
                 std::cout << "Failed to recv data." << std::endl;
@@ -24,7 +24,7 @@ int fill_buffer(int file,char * recv_buffer, char* send_buffer){
         return bytes_recv;
 }
 
-void send_buffer(zmq::socket_t& socket, char* buffer, int bytes_recv){
+void send_buffer(zmq::socket_t socket, char* buffer, int bytes_recv){
         zmq::message_t message(bytes_recv);
         memcpy((char*)message.data(),send_buffer,bytes_recv);
         socket.send(message);
