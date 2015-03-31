@@ -8,10 +8,11 @@
 #include <fcntl.h>
 #include <vector>
 
-std::vector<char> fill_buffer(int& file,int& bytes_recv){
+std::string fill_buffer(int& file,int& bytes_recv){
         int n = 0;
         char recv_buffer[64];
-        std::vector<char> send_buffer(128);
+        std::string send_buffer;
+        send_buffer.reserve(128);
 
         while(bytes_recv < 64)
         {
@@ -21,18 +22,18 @@ std::vector<char> fill_buffer(int& file,int& bytes_recv){
                 std::cout << "Failed to recv data." << n << std::endl;
                 break;
             }
-            memcpy(&send_buffer[bytes_recv],recv_buffer,n);
+            send_buffer.insert(bytes_recv,recv_buffer)
             bytes_recv += n;
             std::cout << "loop" << std::endl;
         }
-        std::cout << "Send_Buffer: "<< &send_buffer[0] << std::endl;
+        std::cout << "Send_Buffer: "<< send_buffer << std::endl;
         return send_buffer;
 }
 
-void send_buffer(zmq::socket_t* socket, std::vector<char> buffer, int bytes_recv){
+void send_buffer(zmq::socket_t* socket, std::string buffer, int bytes_recv){
         std::cout << "sending" << std::endl;
         zmq::message_t message(bytes_recv);
-        memcpy((char*)message.data(),&buffer[0],bytes_recv);
+        memcpy((char*)message.data(),buffer.data(),bytes_recv);
         socket->send(message);
 }
     
@@ -54,8 +55,10 @@ int main(int argc, char* argv[])
     pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY);
 
 
-    std::vector<char> imu1_buffer(128);
-    std::vector<char> pressure_buffer(128);
+    std::string imu1_buffer;
+    std::string pressure_buffer;
+    imu1_buffer.reserve(128);
+    pressure_buffer.reserve(128);
 
 
     int bytes_recv_imu1 = 0;
