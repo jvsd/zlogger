@@ -11,7 +11,7 @@
 std::vector<char> fill_buffer(int& file,int& bytes_recv){
         int n = 0;
         char recv_buffer[64];
-        std::vector<char> send_buffer[128];
+        std::vector<char> send_buffer(128);
 
         while(bytes_recv < 64)
         {
@@ -54,8 +54,8 @@ int main(int argc, char* argv[])
     pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY);
 
 
-    std::vector<char> imu1_buffer[128];
-    std::vector<char> pressure_buffer[128];
+    std::vector<char> imu1_buffer(128);
+    std::vector<char> pressure_buffer(128);
 
 
     int bytes_recv_imu1 = 0;
