@@ -21,10 +21,10 @@ int main(int argc, char* argv[])
 
     zmq::context_t context(1);
     zmq::socket_t socket(context,ZMQ_PUB);
-    socket.bind(bind_cmd+port)
+    socket.bind((bind_cmd+port).c_str());
 
     int ser;
-    ser = open(serial_port);
+    ser = open(serial_port.c_str());
     char recv_buffer[64];
     char send_buffer[128];
     memset(recv_buffer,'\0',sizeof(recv_buffer));
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
         bytes_recv = 0;
         while(bytes_recv < 64)
         {
-            n = read(ser,&buffer,64);
+            n = read(ser,&recv_buffer,64);
             if(n < 0)
             {
                 std::cout << "Failed to recv data." << std::endl;
@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
             bytes_recv += n;
         }
         zmq::message_t message(bytes_recv);
-        memset(message,send_buffer,bytes_recv)
+        memset(char*(message),send_buffer,bytes_recv);
         socket.send(message);
     }
 
