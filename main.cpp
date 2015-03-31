@@ -16,7 +16,7 @@ std::string fill_buffer(int& file,int& bytes_recv){
 
         while(bytes_recv < 64)
         {
-            n = read(file,&recv_buffer,64);
+            n = read(file,recv_buffer,64);
             if(n < 0)
             {
                 std::cout << "Failed to recv data." << n << std::endl;
