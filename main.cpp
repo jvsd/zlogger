@@ -64,6 +64,7 @@ int main(int argc, char* argv[])
         std::cout << "here" << std::endl;
         imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
         pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
+        std::cout << "Out_send_buffer: " << imu1_buffer << std::endl;
         s_send(socket_imu1,imu1_buffer);
         s_send(socket_pressure,pressure_buffer);
 
