@@ -27,6 +27,7 @@ std::string fill_buffer(int& file,int& bytes_recv){
             std::cout << "loop" << std::endl;
         }
         std::cout << "Send_Buffer: "<< send_buffer << std::endl;
+        std::cout << "Bytes: "<< bytes_recv << std::endl;
         return send_buffer;
 }
 
