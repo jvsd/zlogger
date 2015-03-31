@@ -22,7 +22,7 @@ std::string fill_buffer(int& file,int& bytes_recv){
                 std::cout << "Failed to recv data." << n << std::endl;
                 break;
             }
-            send_buffer.insert(bytes_recv,&recv_buffer);
+            send_buffer.insert(bytes_recv,recv_buffer);
             bytes_recv += n;
             std::cout << "String length: " << send_buffer.length() << " Bytes: " << bytes_recv << std::endl;
         }
