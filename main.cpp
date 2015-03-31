@@ -57,6 +57,7 @@ int main(int argc, char* argv[])
     int bytes_recv_imu1 = 0;
     int bytes_recv_pressure = 0;
     while(1){
+        std::cout << "here" << std::endl;
         bytes_recv_imu1 = fill_buffer(imu1,recv_imu1_buffer,imu1_buffer);
         bytes_recv_pressure =fill_buffer(pressure,recv_pressure_buffer,pressure_buffer);
         send_buffer(&socket_imu1,imu1_buffer,bytes_recv_imu1);
