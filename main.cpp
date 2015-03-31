@@ -7,9 +7,11 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-int fill_buffer(int& file,char* recv_buffer, char* send_buffer){
-        int bytes_recv = 0;
+char[128] fill_buffer(int& file,int& bytes_recv){
         int n = 0;
+        char recv_buffer[64];
+        char send_buffer[128];
+
         while(bytes_recv < 64)
         {
             n = read(file,&recv_buffer,64);
@@ -23,7 +25,7 @@ int fill_buffer(int& file,char* recv_buffer, char* send_buffer){
             std::cout << "loop" << std::endl;
         }
         std::cout << "fill2" << std::endl;
-        return bytes_recv;
+        return send_buffer;
 }
 
 void send_buffer(zmq::socket_t* socket, char* buffer, int bytes_recv){
@@ -66,8 +68,8 @@ int main(int argc, char* argv[])
     while(1){
 
         std::cout << "here" << std::endl;
-        bytes_recv_imu1 = fill_buffer(imu1,recv_imu1_buffer,imu1_buffer);
-        bytes_recv_pressure =fill_buffer(pressure,recv_pressure_buffer,pressure_buffer);
+        imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
+        pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
         send_buffer(&socket_imu1,imu1_buffer,bytes_recv_imu1);
         send_buffer(&socket_pressure,pressure_buffer,bytes_recv_pressure);
 
