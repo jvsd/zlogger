@@ -19,6 +19,7 @@ int fill_buffer(int& file,char * recv_buffer, char* send_buffer){
                 std::cout << "Failed to recv data." << n << std::endl;
                 break;
             }
+            std::cout << "Read: " << n << std::endl;
             memcpy(&send_buffer[bytes_recv],recv_buffer,n);
             bytes_recv += n;
         }
