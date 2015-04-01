@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <unistd.h>
+#include <fcntl.h>
 
 std::string fill_buffer(int& file,int& bytes_recv){
         int n = 0;
