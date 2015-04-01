@@ -38,8 +38,8 @@ int main(int argc, char* argv[])
 
     zmq::socket_t socket_imu1(context,ZMQ_PUB);
     zmq::socket_t socket_pressure(context,ZMQ_PUB);
-    socket_imu1.bind("tcp://*:4000");
-    socket_pressure.bind("tcp://*:4001");
+    socket_imu1.bind("ipc:///tmp/4000");
+    socket_pressure.bind("ipc:///tmp/4001");
 
     int imu1;
     imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY);
