@@ -117,7 +117,7 @@ class serial_publisher(object):
             if s.get(self.marker) == zmq.POLLIN:
                 self.mark = float(self.marker.recv())
 
-        t_imu = convert_imu(raw_data)
+        t_imu = self.convert_imu(raw_data)
         plist = [t_imu.ax,t_imu.ay,t_imu.az,t_imu.gx,t_imu.gy,t_imu.gz,t_imu.time,self.mark]
         for item in plist:
             self.log_file.write("%f\t" % item)

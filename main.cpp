@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     imu1_buffer.reserve(128);
     pressure_buffer.reserve(128);
 
-    stringstream outTime;
+    std::stringstream outTime;
 
 
     int bytes_recv_imu1 = 0;
