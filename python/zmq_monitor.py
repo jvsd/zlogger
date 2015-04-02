@@ -24,7 +24,7 @@ if __name__=='__main__':
         
     cont = zmq.Context()
     m_imu = imu_monitor.serial_publisher(3,cont,zmq_port,serial_port,serial_baud)
-    m_pressure = pressure_monitor.logger(s_type = 3,zmq_context = cont,port = zmq_port+10,file_name = 'pressure.log')
+    m_pressure = pressure_monitor.logger(s_type = 3,zmq_context = cont,port = str(int(zmq_port)+10),file_name = 'pressure.log')
 
     serial_subscriber = cont.socket(zmq.SUB)
     serial_subscriber.setsockopt(zmq.SUBSCRIBE,'')

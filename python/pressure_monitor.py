@@ -1,4 +1,5 @@
 import serial
+import zmq
 import time
 import numpy as np
 import struct
@@ -7,7 +8,7 @@ import sys
 import argparse
 
 class logger():
-    def __init__(self,s_type=3,zmq_context,port,file_name='pressure.log'):
+    def __init__(self,s_type,zmq_context,port,file_name):
         self.handle = open(file_name,'a')
         self.server=zmq_context.socket(zmq.REP)
         self.data_server = zmq_context.socket(zmq.PUB)
@@ -27,7 +28,7 @@ class logger():
         self.time = 0
         self.zmq_context = zmq_context
 
-    def setup_serial(self)
+    def setup_serial(self):
         self.ser = serial.Serial(
                         port = '/dev/ttyO1',
                         baudrate=115200,
@@ -97,7 +98,7 @@ class logger():
         else:
             print 'nothing ' + str(len(self.buffer))
 
-    def log_data(self,data)
+    def log_data(self,data):
         s = dict(self.mark_poller.poll(0))
         if s:
             if s.get(self.marker) == zmq.POLLIN:
