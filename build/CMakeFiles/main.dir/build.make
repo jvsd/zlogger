@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jamesd/Dropbox/Developer/beagle/zlogger
+CMAKE_SOURCE_DIR = /home/jamesd/Developer/zlogger
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jamesd/Dropbox/Developer/beagle/zlogger/build
+CMAKE_BINARY_DIR = /home/jamesd/Developer/zlogger/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/main.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/main.dir/flags.make
 
 CMakeFiles/main.dir/main.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/main.cpp.o: ../main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/jamesd/Dropbox/Developer/beagle/zlogger/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/jamesd/Developer/zlogger/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/main.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/main.cpp.o -c /home/jamesd/Dropbox/Developer/beagle/zlogger/main.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/main.cpp.o -c /home/jamesd/Developer/zlogger/main.cpp
 
 CMakeFiles/main.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/main.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/jamesd/Dropbox/Developer/beagle/zlogger/main.cpp > CMakeFiles/main.dir/main.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/jamesd/Developer/zlogger/main.cpp > CMakeFiles/main.dir/main.cpp.i
 
 CMakeFiles/main.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/main.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/jamesd/Dropbox/Developer/beagle/zlogger/main.cpp -o CMakeFiles/main.dir/main.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/jamesd/Developer/zlogger/main.cpp -o CMakeFiles/main.dir/main.cpp.s
 
 CMakeFiles/main.dir/main.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/main.cpp.o.requires
@@ -97,6 +97,6 @@ CMakeFiles/main.dir/clean:
 .PHONY : CMakeFiles/main.dir/clean
 
 CMakeFiles/main.dir/depend:
-	cd /home/jamesd/Dropbox/Developer/beagle/zlogger/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/jamesd/Dropbox/Developer/beagle/zlogger /home/jamesd/Dropbox/Developer/beagle/zlogger /home/jamesd/Dropbox/Developer/beagle/zlogger/build /home/jamesd/Dropbox/Developer/beagle/zlogger/build /home/jamesd/Dropbox/Developer/beagle/zlogger/build/CMakeFiles/main.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/jamesd/Developer/zlogger/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/jamesd/Developer/zlogger /home/jamesd/Developer/zlogger /home/jamesd/Developer/zlogger/build /home/jamesd/Developer/zlogger/build /home/jamesd/Developer/zlogger/build/CMakeFiles/main.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/main.dir/depend
 

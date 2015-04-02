@@ -1,1 +1,1 @@
-/home/jamesd/Dropbox/Developer/beagle/zlogger/build/CMakeFiles/main.dir
+/home/jamesd/Developer/zlogger/build/CMakeFiles/main.dir

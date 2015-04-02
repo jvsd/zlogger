@@ -36,7 +36,7 @@ stdarg.h
 signal.h
 -
 
-/home/jamesd/Dropbox/Developer/beagle/zlogger/main.cpp
+/home/jamesd/Developer/zlogger/main.cpp
 sys/ioctl.h
 -
 sys/types.h
@@ -46,5 +46,15 @@ time.h
 zhelpers.hpp
 -
 inttypes.h
+-
+iostream
+-
+stdlib.h
+-
+vector
+-
+unistd.h
+-
+fcntl.h
 -
 

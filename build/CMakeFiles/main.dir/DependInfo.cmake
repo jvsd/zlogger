@@ -4,7 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/jamesd/Dropbox/Developer/beagle/zlogger/main.cpp" "/home/jamesd/Dropbox/Developer/beagle/zlogger/build/CMakeFiles/main.dir/main.cpp.o"
+  "/home/jamesd/Developer/zlogger/main.cpp" "/home/jamesd/Developer/zlogger/build/CMakeFiles/main.dir/main.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 
