@@ -49,10 +49,10 @@ int main(int argc, char* argv[])
     struct tm *localTime;
 
     int imu1;
-    imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY);
+    imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY | O_NDELAY);
 
     int pressure;
-    pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY);
+    pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY | O_NDELAY);
 
 
     std::string imu1_buffer;

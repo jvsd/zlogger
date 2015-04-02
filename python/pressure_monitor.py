@@ -7,9 +7,25 @@ import sys
 import argparse
 
 class logger():
-    def __init__(self,file_name):
-        self.handle = file(file_name,'a')
+    def __init__(self,s_type=3,zmq_context,port,file_name='pressure.log'):
+        self.handle = open(file_name,'a')
+        self.server=zmq_context.socket(zmq.REP)
+        self.data_server = zmq_context.socket(zmq.PUB)
+        self.data_server.bind('tcp://*:'+port)
+        self.server.bind('tcp://*:'+str(int(port)+1))
+        self.poller = zmq.Poller()
+        self.poller.register(self.server,zmq.POLLIN)
+
+        self.marker=zmq_context.socket(zmq.SUB)
+        self.marker.setsockopt(zmq.SUBSCRIBE,'')
+        self.marker.connect('tcp://localhost:5001')
+        self.mark_poller = zmq.Poller()
+        self.mark_poller.register(self.marker,zmq.POLLIN)
+        self.mark = 0.0
 	self.buffer = ''
+        self.s_type=3
+        self.time = 0
+        self.zmq_context = zmq_context
 
     def setup_serial(self)
         self.ser = serial.Serial(
@@ -63,21 +79,36 @@ class logger():
         print 'closing...'
         sys.exit(0)
 
-    def run(self):
-        signal.signal(signal.SIGINT, self.signal_handler)
-        #while(True):
-	if self.ser.inWaiting() > 128:
-            self.buffer=self.buffer + self.ser.read(128)
+    def run(self,buffer='',time_stamp=''):
+        if self.s_type == 0:
+	    if self.ser.inWaiting() > 128:
+                self.buffer=self.buffer + self.ser.read(128)
+        elif self.s_type == 3:
+            self.buffer = buffer
+            self.time = time_stamp
 
-        #self.buffer = self.buffer + self.ser.read(self.ser.inWaiting())
-        #if '\xff\xfb' in self.buffer:
-            #data = self.convert_buffer_bin_to_np(self.buffer)
-            #if data[0][0] != 0.0 and data[0][1] != 0.0:
-            #    np.savetxt(self.handle,data,fmt='%d',delimiter='\t')
-            #self.buffer=self.buffer.split('\xff\xfb')[-1]
-        #else:
-        #    print 'nothing ' + str(len(self.buffer))
-	#time.sleep(.05)
+
+        if '\xff\xfb' in self.buffer:
+            data = self.convert_buffer_bin_to_np(self.buffer)
+            if data[0][0] != 0.0 and data[0][1] != 0.0:
+                #np.savetxt(self.handle,data,fmt='%d',delimiter='\t')
+                self.log_data(data)
+            self.buffer=self.buffer.split('\xff\xfb')[-1]
+        else:
+            print 'nothing ' + str(len(self.buffer))
+
+    def log_data(self,data)
+        s = dict(self.mark_poller.poll(0))
+        if s:
+            if s.get(self.marker) == zmq.POLLIN:
+                self.mark = float(self.marker.recv())
+        for i in range(data.shape[0]):
+            plist = data[i].tolist()
+            for item in plist:
+                self.handle.write("%f\t" % item)
+            self.handle.write(self.time + '\n')
+
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
