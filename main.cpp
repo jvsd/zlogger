@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+// ./main ran as default and python script ran with -5 works well. Must setup ports with python prior. also set cpu_Freq to performance.
+
 std::string fill_buffer(int& file,int& bytes_recv){
         int n = 0;
         char recv_buffer[64];
