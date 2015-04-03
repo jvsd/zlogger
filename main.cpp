@@ -32,7 +32,7 @@ std::string fill_buffer(int& file,int& bytes_recv){
             }
             send_buffer.insert(bytes_recv,&recv_buffer[0],n);
             bytes_recv += n;
-            std::cout << "String length: " << send_buffer.length() << " Bytes: " << bytes_recv << std::endl;
+            std::cout << "String length: " << send_buffer.size() << " Bytes: " << bytes_recv << std::endl;
         }
         return send_buffer;
 }
