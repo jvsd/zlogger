@@ -85,7 +85,7 @@ class logger():
 	    if self.ser.inWaiting() > 128:
                 self.buffer=self.buffer + self.ser.read(128)
         elif self.s_type == 3:
-            self.buffer = buffer + self.buffer
+            self.buffer = self.buffer + buffer
             self.time = time_stamp
 
 

@@ -85,7 +85,7 @@ class serial_publisher(object):
             self.buffer = self.buffer + self.subscriber.recv()
             print len(self.buffer)
         elif self.s_type==3:
-            self.buffer = buffer + self.buffer
+            self.buffer = self.buffer + buffer
             self.time = time_stamp 
 
 
