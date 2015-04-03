@@ -50,10 +50,10 @@ int main(int argc, char* argv[])
     timeval curTime;
 
     int imu1;
-    imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY | O_NDELAY);
+    imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY); //| O_NDELAY);
 
     int pressure;
-    pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY | O_NDELAY);
+    pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY); // | O_NDELAY);
 
 
     std::string imu1_buffer;
