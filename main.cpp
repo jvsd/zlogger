@@ -45,8 +45,9 @@ int main(int argc, char* argv[])
     socket_imu1.bind("ipc:///tmp/4000");
     //socket_pressure.bind("ipc:///tmp/4001");
 
-    time_t currentTime;
+    //time_t currentTime;
     struct tm *localTime;
+    timeval curTime;
 
     int imu1;
     imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY | O_NDELAY);
@@ -70,20 +71,23 @@ int main(int argc, char* argv[])
         bytes_recv_imu1 = 0;
         bytes_recv_pressure = 0;
 
-        time(&currentTime);
-        localTime=localtime(&currentTime);
+        //time(&currentTime);
+        gettimeofday(&curTime,NULL);
+        localTime=localtime(&curTime.tv_sec);
+
 
        int day = localTime->tm_mday;
        int hour = localTime->tm_hour;
        int min = localTime->tm_min;
        int sec = localTime->tm_sec;
+       int millis = curTime.tv_usec / 1000;
 
         imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
         pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
 
 
 
-        outTime << day << " " << hour << " " << min << " " << sec;
+        outTime << day << ":" << hour << ":" << min << ":" << sec << ":" << millis;
         s_sendmore(socket_imu1,outTime.str());
         s_sendmore(socket_imu1,imu1_buffer);
         s_send(socket_imu1,pressure_buffer);
