@@ -60,14 +60,14 @@ int main(int argc, char* argv[])
 
     std::string imu1_buffer;
     std::string pressure_buffer;
-    imu1_buffer.reserve(SEND_BUF_SIZE);
-    pressure_buffer.reserve(SEND_BUF_SIZE);
 
 
 
     int bytes_recv_imu1 = 0;
     int bytes_recv_pressure = 0;
     while(1){
+        imu1_buffer.reserve(SEND_BUF_SIZE);
+        pressure_buffer.reserve(SEND_BUF_SIZE);
         std::stringstream outTime;
 
         bytes_recv_imu1 = 0;
@@ -85,6 +85,8 @@ int main(int argc, char* argv[])
 
         imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
         pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
+        imu1_buffer.shrink_to_fit();
+        pressure_buffer.shrink_to_fit();
 
         outTime << day << ":" << hour << ":" << min << ":" << sec << ":" << millis;
         s_sendmore(socket_imu1,outTime.str());
