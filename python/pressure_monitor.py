@@ -66,7 +66,7 @@ class logger():
                     temp = np.asarray(temp)
                 except:
                     print 'exception\n'
-                    print i[DATA_VARIABLES:len(i)]
+                    print i[DATA_VARIABLES*2:len(i)]
                     temp = []
                 if len(temp) >10:
                     if flag==0:
