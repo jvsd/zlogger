@@ -1,0 +1,107 @@
+Using ntpd and ntpdate to host an ntp time server and sync other clients to the ntp server with ntpdate.
+
+Two services
+
+ntpdate.service
+ntpd.service
+
+Linux beaglebone 3.8.13-bone71 #1 SMP Tue Mar 17 18:07:44 UTC 2015 armv7l GNU/Linux
+
+apt-get install ntp
+
+If there is an init script for ntp remove it...
+/etc/rc3.d/
+
+put services into /etc/systemd/system from http://derekmolloy.ie/automatically-setting-the-beaglebone-black-time-using-ntp/
+
+#ntpd.service 
+[Unit]
+Description=Network Time Service
+After=network.target
+ 
+[Service]
+Type=forking
+PIDFile=/run/ntpd.pid
+ExecStart=/usr/bin/ntpd -p /run/ntpd.pid
+ 
+[Install]
+WantedBy=multi-user.target
+
+#ntpdate.service
+[Unit]
+Description=Network Time Service (one-shot ntpdate mode)
+Before=ntpd.service
+ 
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ntpd -q -g -x
+ExecStart=/sbin/hwclock --systohc
+RemainAfterExit=yes
+ 
+[Install]
+WantedBy=multi-user.target
+root@beaglebone:/lib/systemd/system#
+
+symlink into /lib/systemd/system
+
+systemctl enable ntpdate.service
+systemctl enabel ntpd.service
+
+#ntp.conf file
+# /etc/ntp.conf, configuration for ntpd; see ntp.conf(5) for help
+
+driftfile /var/lib/ntp/ntp.drift
+
+
+# Enable this if you want statistics to be logged.
+#statsdir /var/log/ntpstats/
+
+#statistics loopstats peerstats clockstats
+#filegen loopstats file loopstats type day enable
+#filegen peerstats file peerstats type day enable
+#filegen clockstats file clockstats type day enable
+
+
+# You do need to talk to an NTP server or two (or three).
+#server ntp.your-provider.example
+
+# pool.ntp.org maps to about 1000 low-stratum NTP servers.  Your server will
+# pick a different set every time it starts up.  Please consider joining the
+# pool: <http://www.pool.ntp.org/join.html>
+server 0.debian.pool.ntp.org iburst
+server 1.debian.pool.ntp.org iburst
+server 2.debian.pool.ntp.org iburst
+server 3.debian.pool.ntp.org iburst
+server 127.127.1.1
+fudge 127.127.1.1 stratum 15
+
+
+# Access control configuration; see /usr/share/doc/ntp-doc/html/accopt.html for
+# details.  The web page <http://support.ntp.org/bin/view/Support/AccessRestrictions>
+# might also be helpful.
+#
+# Note that "restrict" applies to both servers and clients, so a configuration
+# that might be intended to block requests from certain clients could also end
+# up blocking replies from your own upstream servers.
+
+# By default, exchange time with everybody, but don't allow configuration.
+restrict -4 default kod notrap nomodify nopeer noquery
+restrict -6 default kod notrap nomodify nopeer noquery
+
+# Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1
+restrict ::1
+
+# Clients from this (example!) subnet have unlimited access, but only if
+# cryptographically authenticated.
+restrict 192.168.0.0 mask 255.255.255.0 nomodify notrap
+
+
+# If you want to provide time to your local subnet, change the next line.
+# (Again, the address is an example only.)
+#broadcast 192.168.123.255
+
+# If you want to listen to time broadcasts on your local subnet, de-comment the
+# next lines.  Please do this only if you trust everybody on the network!
+#disable auth
+#broadcastclient
