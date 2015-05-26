@@ -13,6 +13,7 @@
 
 int SEND_BUF_SIZE = 512;
 int RECV_BUF_SIZE = 128;
+bool DEBUG = false;
 
 // ./main ran as default and python script ran with -5 works well. Must setup ports with python prior. also set cpu_Freq to performance.
 
@@ -32,7 +33,10 @@ std::string fill_buffer(int& file,int& bytes_recv){
             }
             send_buffer.insert(bytes_recv,&recv_buffer[0],n);
             bytes_recv += n;
-            std::cout << "String length: " << send_buffer.size() << " Bytes: " << bytes_recv << std::endl;
+            if(DEBUG)
+            {
+                std::cout << "String length: " << send_buffer.size() << " Bytes: " << bytes_recv << std::endl;
+            }
         }
         return send_buffer;
 }
@@ -54,10 +58,7 @@ int main(int argc, char* argv[])
     timeval curTime;
 
     int imu1;
-    imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY); //| O_NDELAY);
-
     int pressure;
-    pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY); // | O_NDELAY);
 
 
     std::string imu1_buffer;
@@ -73,6 +74,8 @@ int main(int argc, char* argv[])
         zmq::message_t request;
         requested.recv(&request);
         counter = 0;
+        imu1 = open("/dev/ttyO5",O_RDWR| O_NOCTTY | O_SYNC); //| O_NDELAY);
+        pressure = open("/dev/ttyO1",O_RDWR| O_NOCTTY | O_SYNC); // | O_NDELAY);
 
         while(counter < 500)
         {
@@ -103,8 +106,10 @@ int main(int argc, char* argv[])
             counter += 1;
         }
 
+        close(imu1);
+        close(pressure);
         zmq::message_t reply(sizeof(int));
-        memcopy ((void *) reply.data (), counter,sizeof(int));
+        memcpy ((void *) reply.data (), &counter,sizeof(int));
         requested.send(reply);
     }
 
