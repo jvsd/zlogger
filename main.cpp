@@ -44,9 +44,11 @@ int main(int argc, char* argv[])
     zmq::context_t context(1);
 
     zmq::socket_t socket_imu1(context,ZMQ_PUB);
-    //zmq::socket_t socket_pressure(context,ZMQ_PUB);
-    socket_imu1.bind("ipc:///tmp/4000");
-    //socket_pressure.bind("ipc:///tmp/4001");
+    zmq::socket_t requested(context,ZMQ_REP);
+    requested.bind("tcp://*:4001");
+    //socket_imu1.bind("ipc:///tmp/4000");
+    socket_imu1.bind("tcp://*:4000");
+
 
     struct tm *localTime;
     timeval curTime;
@@ -65,34 +67,45 @@ int main(int argc, char* argv[])
 
     int bytes_recv_imu1 = 0;
     int bytes_recv_pressure = 0;
+    int counter;
     while(1){
-        imu1_buffer.reserve(SEND_BUF_SIZE);
-        pressure_buffer.reserve(SEND_BUF_SIZE);
-        std::stringstream outTime;
 
-        bytes_recv_imu1 = 0;
-        bytes_recv_pressure = 0;
+        zmq::message_t request;
+        requested.recv(&request);
+        counter = 0;
 
-        gettimeofday(&curTime,NULL);
-        localTime=localtime(&curTime.tv_sec);
+        while(counter < 500)
+        {
+            imu1_buffer.reserve(SEND_BUF_SIZE);
+            pressure_buffer.reserve(SEND_BUF_SIZE);
+            std::stringstream outTime;
+
+            bytes_recv_imu1 = 0;
+            bytes_recv_pressure = 0;
+
+            gettimeofday(&curTime,NULL);
+            localTime=localtime(&curTime.tv_sec);
 
 
-        int day = localTime->tm_mday;
-        int hour = localTime->tm_hour;
-        int min = localTime->tm_min;
-        int sec = localTime->tm_sec;
-        int millis = curTime.tv_usec / 1000;
+            int day = localTime->tm_mday;
+            int hour = localTime->tm_hour;
+            int min = localTime->tm_min;
+            int sec = localTime->tm_sec;
+            int millis = curTime.tv_usec / 1000;
 
-        imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
-        pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
-        //imu1_buffer.shrink_to_fit();
-        //pressure_buffer.shrink_to_fit();
+            imu1_buffer = fill_buffer(imu1,bytes_recv_imu1);
+            pressure_buffer = fill_buffer(pressure,bytes_recv_pressure);
 
-        outTime << day << ":" << hour << ":" << min << ":" << sec << ":" << millis;
-        s_sendmore(socket_imu1,outTime.str());
-        s_sendmore(socket_imu1,imu1_buffer);
-        s_send(socket_imu1,pressure_buffer);
+            outTime << day << ":" << hour << ":" << min << ":" << sec << ":" << millis;
+            s_sendmore(socket_imu1,outTime.str());
+            s_sendmore(socket_imu1,imu1_buffer);
+            s_send(socket_imu1,pressure_buffer);
+            counter += 1;
+        }
 
+        zmq::message_t reply(sizeof(int));
+        memcopy ((void *) reply.data (), counter,sizeof(int));
+        requested.send(reply);
     }
 
 }
