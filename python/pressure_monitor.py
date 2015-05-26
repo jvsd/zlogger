@@ -62,7 +62,8 @@ class logger():
                     k = j*2
                     temp.append(struct.unpack('h',i[k]+i[k+1])[0])
                 try:    
-                    temp.append(float(i[DATA_VARIABLES*2:len(i)]))#27*2 variables
+                    #temp.append(float(i[DATA_VARIABLES*2:len(i)]))#27*2 variables
+                    temp.append(struct.unpack('H',i[DATA_VARIABLES*2:len(i)])[0])
                     temp = np.asarray(temp)
                 except:
                     print 'exception\n'
