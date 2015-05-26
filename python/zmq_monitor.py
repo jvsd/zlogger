@@ -28,7 +28,7 @@ if __name__=='__main__':
 
     serial_subscriber = cont.socket(zmq.SUB)
     serial_subscriber.setsockopt(zmq.SUBSCRIBE,'')
-    serial_subscriber.connect("ipc:///tmp/4000")
+    serial_subscriber.connect("tcp://10.0.0.20:4000")
     
     while(True):
         message = serial_subscriber.recv_multipart()
