@@ -58,6 +58,7 @@ class logger():
         for x,i in enumerate(lines):
             temp = []
             if len(i) >= DATA_VARIABLES*2:
+		self.data_server.send(i)
                 for j in range(DATA_VARIABLES):
                     k = j*2
                     temp.append(struct.unpack('h',i[k]+i[k+1])[0])
