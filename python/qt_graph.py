@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#export PYTHONPATH=/media/disk/users/jamesd/Dropbox/Developer/virtualenv/imu/python/pyqtgraph/pyqtgraph:/media/disk/users/jamesd/Dropbox/Developer/virtualenv/imu/python/pyqtgraph/examples
 
 import initExample
 
