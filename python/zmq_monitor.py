@@ -28,23 +28,47 @@ if __name__=='__main__':
     m_pressure = pressure_monitor.logger(s_type = 3,zmq_context = cont,port = str(int(zmq_port)+10),file_name = 'pressure.log')
 
     serial_subscriber = cont.socket(zmq.SUB)
+    starter_sock = cont.socket(zmq.REP)
     serial_subscriber.setsockopt(zmq.SUBSCRIBE,'')
     serial_subscriber.connect("tcp://192.168.0.150:4000")
+    starter_sock.bind("tcp://*:4998")
     marker = cont.socket(zmq.PUB)
     marker.bind("tcp://*:4999")
-    marker.send(str(1))
 
-    requested = cont.socket(zmq.REQ)
-    requested.connect("tcp://192.168.0.150:4001")
-    requested.send('none')
-    start_stamp = requested.recv()
-    
+    poller = zmq.Poller()
+    poller.register(serial_subscriber,zmq.POLLIN)
+
     while(True):
-        message = serial_subscriber.recv_multipart()
+        ##Wait for starting signal
+        r = starter_sock.recv()
+        starter_sock.send(r)
+        #send marker from starting signal
+        marker.send(str(r))
 
-        m_imu.run(buffer = message[0],time_stamp = start_stamp)
-        m_imu2.run(buffer = message[1],time_stamp = start_stamp)
-        m_pressure.run(buffer = message[2],time_stamp = start_stamp)
+        #start zlogger
+        requested = cont.socket(zmq.REQ)
+        requested.connect("tcp://192.168.0.150:4001")
+        requested.send('none')
+        #get start time stamp
+        start_stamp = requested.recv()
+        
+        recv_messages = 0
+        while(True):
+            try:
+                socks = dict(poller.poll(10*1000))
+            except:
+                print 'exception in poll'
+                break
+            if serial_subscriber in socks:
+                message = serial_subscriber.recv_multipart()
+                recv_message += 1
+
+                m_imu.run(buffer = message[0],time_stamp = start_stamp)
+                m_imu2.run(buffer = message[1],time_stamp = start_stamp)
+                m_pressure.run(buffer = message[2],time_stamp = start_stamp)
+            else:
+                break
+        print "Received " + str(recv_messages) + " messages with time " + str(start_stamp) + ", marked by " + str(r)
 
 
 

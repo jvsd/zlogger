@@ -110,6 +110,7 @@ lr.setZValue(-10)
 lr2 = pg.LinearRegionItem([0,500])
 lr2.setZValue(-10)
 
+
     #app.processEvents()  ## force complete redraw for every plot
 timer = QtCore.QTimer()
 timer.timeout.connect(update)
